@@ -24,7 +24,7 @@ public interface MusicRepository extends MongoRepository<Music, String> {
 	List<Music> findByName(String nameMusic);
 
 	// search by regex
-	@Query("find({'nameMusic':{ '$regex':?0, '$options': 'i'}}).sort({'lastUpdate':'-1'})")
+	@Query("{'$query' : {'nameMusic':{'$regex': 'h', '$options': 'i'}}, '$orderby' : {'lastUpdate':-1}}")
 	List<Music> findByNameRegex(String nameMusic);
 	
 	@Override
@@ -35,6 +35,7 @@ public interface MusicRepository extends MongoRepository<Music, String> {
 	
 	//Update
 	@Query("{'id':?0}")
-	List<Music> findById(String id);
+	Music findById(String id);
+	
 	
 }

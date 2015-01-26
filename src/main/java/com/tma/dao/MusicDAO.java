@@ -5,17 +5,16 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.tma.model.Music;
+import com.tma.response.MusicResponse;
 
 public interface MusicDAO {
-	public void insert(Music music);
+	public MusicResponse insert(Music music);
 
-	public void update(String id, Music music);
+	public MusicResponse update(String id, Music music);
 
-	public List<Music> search(String name);
+	public MusicResponse search(String name);
 
-	public void delete(String id);
-
-	//public List<Music> paging();
+	public MusicResponse delete(List<String> ids);
 
 	public Page<Music> page();
 }

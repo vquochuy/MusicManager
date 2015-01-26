@@ -1,5 +1,6 @@
 package com.tma.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.tma.model.Music;
 import com.tma.repo.MusicRepository;
+import com.tma.response.MusicResponse;
+import com.tma.response.Response;
 
 @Component
 public class MusicDAOImpl implements MusicDAO {
@@ -18,39 +21,65 @@ public class MusicDAOImpl implements MusicDAO {
 
 	// Insert Music to Database
 	@Override
-	public void insert(Music music) {
+	public MusicResponse insert(Music music) {
 		repo.save(music);
-
+		List<Music> musics = new ArrayList<Music>();
+		musics.add(music);
+		return new MusicResponse(new Response("200", "Successful",
+				"Create New Music"), musics);
 	}
 
-	// Update Music to Database by Id
+	// Update Music to Databasse by Id
 	@Override
-	public void update(String id, Music music) {
-		repo.findById(id);
+	public MusicResponse update(String id, Music musicUpdate) {
+		Music music = repo.findById(id);
+		List<Music> mus = new ArrayList<Music>();
+
+		if (music == null) {
+			repo.save(musicUpdate);
+			return new MusicResponse(new Response("200", "Successful",
+					"Create New Music"), null);
+		} else {
+			if (musicUpdate.getGenre() != null) {
+				music.setGenre(musicUpdate.getGenre());
+			}
+			if (musicUpdate.getNameMusic() != null) {
+				music.setNameMusic(musicUpdate.getNameMusic());
+			}
+			if (musicUpdate.getPath() != null) {
+				music.setPath(musicUpdate.getPath());
+			}
+			mus.add(music);
+			repo.save(music);
+			return new MusicResponse(new Response("200", "Successful",
+					"Update Music Successful"), mus);
+		}
+
 	}
 
 	// Search Music by name
 	@Override
-	public List<Music> search(String name) {
+	public MusicResponse search(String name) {
 		List<Music> listMusic = repo.findByNameRegex(name);
-		return listMusic;
+		return new MusicResponse(new Response("200", "Successfull",
+				"Search Music Successfull"), listMusic);
 	}
 
 	@Override
-	public void delete(String id) {
-		
-		repo.delete(id);
-	}
+	public MusicResponse delete(List<String> ids) {
+		List<Music> listMusic = new ArrayList<Music>();
 
-	// @Override
-	// public List<Music> paging() {
-	// Page<Music> musics = repo.findAll(new PageRequest(0, 10));
-	// return (List<Music>) musics;
-	// }
+		for (String id : ids) {
+			listMusic.add(repo.findById(id));
+			repo.delete(id);
+		}
+		return new MusicResponse(new Response("200", "Successfull",
+				"Delete Music Successful"), listMusic);
+	}
 
 	@Override
 	public Page<Music> page() {
-		Page<Music> musics = repo.findAll(new PageRequest(0, 10));
+		Page<Music> musics = repo.findAll(new PageRequest(0, 5));
 		return musics;
 	}
 

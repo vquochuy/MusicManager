@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tma.dao.MusicDAOImpl;
 import com.tma.model.Music;
+import com.tma.response.MusicResponse;
 
 @Controller
 @RequestMapping("/api/music")
@@ -24,28 +25,36 @@ public class MusicController {
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public Page<Music> getMusic() {
-//		Music music = new Music("Hello", "POP", "D:/music");
-//		return music;
 		return musidao.page();
 	}
-
+//	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
+//	@ResponseBody
+//	public Music getMusics() {
+//		Music music = new Music("Hello", "POP", "D:/music");
+//		return music;
+//	
+//	}
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public void addMusic(@RequestBody Music music) {
-		musidao.insert(music);
+	public MusicResponse addMusic(@RequestBody Music music) {
+		return musidao.insert(music);
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Music> searchMusic(@RequestParam("nameMusic") String name) {
-		List<Music> musics = musidao.search(name);
-		return musics;
+	public MusicResponse searchMusic(@RequestParam("nameMusic") String name) {
+		return musidao.search(name);
 	}
 	
-	@RequestMapping(value="/delete", method= RequestMethod.GET, produces ="appication/json")
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public String deleteMusic(@RequestParam("id") String id){
-		musidao.delete(id);
-		return "Delete OK";
+	public MusicResponse updateMusic(@RequestParam("id") String id, @RequestBody Music music) {
+		return musidao.update(id, music);
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
+	@ResponseBody
+	public MusicResponse deleteMusic(@RequestBody List<String> ids) {
+		return musidao.delete(ids);
 	}
 }
