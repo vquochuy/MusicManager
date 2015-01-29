@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.tma.model.Music;
@@ -23,10 +25,8 @@ public class MusicDAOImpl implements MusicDAO {
 	@Override
 	public MusicResponse insert(Music music) {
 		repo.save(music);
-		List<Music> musics = new ArrayList<Music>();
-		musics.add(music);
 		return new MusicResponse(new Response("200", "Successful",
-				"Create New Music"), musics);
+				"Create New Music"), music);
 	}
 
 	// Update Music to Databasse by Id
@@ -60,7 +60,9 @@ public class MusicDAOImpl implements MusicDAO {
 	// Search Music by name
 	@Override
 	public MusicResponse search(String name) {
+		//PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "lastUpdate");
 		List<Music> listMusic = repo.findByNameRegex(name);
+		//Page<Music> musics = repo.findAll((Predicate) listMusic, pageRequest);
 		return new MusicResponse(new Response("200", "Successfull",
 				"Search Music Successfull"), listMusic);
 	}
@@ -79,7 +81,8 @@ public class MusicDAOImpl implements MusicDAO {
 
 	@Override
 	public Page<Music> page() {
-		Page<Music> musics = repo.findAll(new PageRequest(0, 5));
+		Page<Music> musics = repo.findAll(new PageRequest(0, 5,
+				Sort.Direction.DESC, "lastUpdate"));
 		return musics;
 	}
 

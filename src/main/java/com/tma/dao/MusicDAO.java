@@ -17,4 +17,8 @@ public interface MusicDAO {
 	public MusicResponse delete(List<String> ids);
 
 	public Page<Music> page();
+	
+	
+
+	//public Page<Music> page(int pageNo);
 }

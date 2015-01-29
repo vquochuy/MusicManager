@@ -1,7 +1,10 @@
 package com.tma.repo;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -27,12 +30,9 @@ public interface MusicRepository extends MongoRepository<Music, String> {
 	@Query("{'$query' : {'nameMusic':{'$regex': 'h', '$options': 'i'}}, '$orderby' : {'lastUpdate':-1}}")
 	List<Music> findByNameRegex(String nameMusic);
 	
-	@Override
-	public List<Music> findAll(Sort sort);
 	
 	//Search and sort
-	
-	
+
 	//Update
 	@Query("{'id':?0}")
 	Music findById(String id);

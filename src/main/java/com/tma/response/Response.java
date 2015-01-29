@@ -1,6 +1,6 @@
 package com.tma.response;
 
-public class Response {
+public class Response  {
 	private String statusCode;
 	private String status;
 	private String message;
